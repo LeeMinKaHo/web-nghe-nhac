@@ -36,7 +36,7 @@ export class AuthService{
         const username = signInDTO.username
         const user = await this.userRepository.findOne({
             where: { username },
-            select: ['email', 'password','avatarUrl'],
+            select: [ "id",'email', 'password','avatarUrl'],
 
           });
         if (!user)

@@ -1,23 +1,36 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './modules/users/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { user } from './database/entities/user.entity';
+import { DatabaseConfig } from 'ormconfig';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { songModule } from './modules/songs/song.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+import { cwd } from 'process';
+import { currentUserMiddleware } from './modules/users/middlewares/current-user.middleware';
+
 
 @Module({
-  imports: [
-    TypeOrmModule.forRoot({
-      type:"mysql",
-      host: "localhost",
-      port: 3306,
-      username: "root",
-      password: "LeKhoa@123",
-      database: "spotify",
-      entities:[user]
+  imports: [ 
+    ServeStaticModule.forRoot({
+    rootPath: join(process.cwd(),'public'),
     }),
-    UserModule],
-  controllers: [AppController,],
+    TypeOrmModule.forRoot({
+      ...DatabaseConfig,
+      autoLoadEntities:true,
+      logging:true
+    }),
+    UserModule,
+    songModule
+  ],
+  controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(currentUserMiddleware).forRoutes('*');
+  }
+}

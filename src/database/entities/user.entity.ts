@@ -21,4 +21,7 @@ export class user{
 
     @Column()
     email:string
+
+    @Column()
+    role: string;
 }
