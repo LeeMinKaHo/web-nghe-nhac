@@ -4,13 +4,16 @@ import { SignUpDTO } from "../dto/signUp.dto";
 import { AuthService } from "../services/auth.services";
 import { UsersService } from "../services/users.services";
 import { UserReponse } from "../dto/usereponse.dto";
+import { forgotPasswordDTO } from "../dto/forGotPassword.dto";
+import { tokenService } from "../services/token.services";
 
 
 @Controller('users')
 export class UsersController{
     constructor(
         private usersService : UsersService,
-        private authService : AuthService
+        private authService : AuthService,
+        private tokenService : tokenService
     ){}
     @Post('sign-up')
     async signUp(@Body() signUpDTO : SignUpDTO){
@@ -23,11 +26,12 @@ export class UsersController{
     ){
         const user = await this.authService.SignIn(SignInDTO);
         session.userId = user.id;
-         // Create a response object
-        const userResponse: UserReponse = {
-            avatarUrl: user.avatarUrl,
-            email: user.email,
-        };     
-        return userResponse;
+        console.log(session.userId)
+        return "Login susscessful";
+    }
+    @Post('forgot-password')
+    async forgotPassword(@Body() forgotPasswordDTO : forgotPasswordDTO)
+    {
+        return await this.tokenService.createToken(forgotPasswordDTO)
     }
 }
