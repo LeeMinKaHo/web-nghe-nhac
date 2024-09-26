@@ -15,13 +15,20 @@ import { createSongDTO } from '../dto/create-song.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { RolesGuard } from 'src/guards/roles.guards';
 import { Roles } from 'src/modules/users/decorators/roles.decoration';
+import { StorageService } from '../services/storage.services';
 
 @Controller('songs')
 export class songController {
-  constructor(private _songService: songService) {}
+  constructor(private _songService: songService , private _storeageServce : StorageService) {}
   @Get()
   async getAll() {
-    return await this._songService.getAll();
+    const songs = await this._songService.getAll();
+    
+    for (const song of songs) { // Use 'for...of' to iterate
+      const Url = await this._storeageServce.downloadUrl(song.id); // Assuming this method generates the URL
+      song.downloadUrl = Url.href
+    }
+    return songs; //
   }
   @Post()
   @UseGuards(RolesGuard)
@@ -44,7 +51,9 @@ export class songController {
     )
     file: Express.Multer.File,
   ) {
-    console.log(req.currentUser);
+      const newsong = await this._songService.create(createSong,file)
+      this._storeageServce.upload(newsong.id,file)
     return true;
   }
+  
 }

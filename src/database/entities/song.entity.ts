@@ -20,4 +20,6 @@ export class song{
     duration : number
     @Column()
     file_url : string
+    
+    downloadUrl:string
 }

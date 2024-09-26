@@ -21,7 +21,7 @@ export class songService {
      let newsong = this.songRepository.create({
       ...CreateSongDTO,
     });
-
+    newsong.duration = 300;
     newsong = await this.songRepository.save(newsong);
     // save location file
     // folder of file
@@ -37,7 +37,7 @@ export class songService {
     fs.writeFileSync(filePath, file.buffer);
 
     newsong.file_url = `${process.env.HOST}/song/${newsong.id.toString()}/${file.originalname}`;
-    newsong.duration = 300;
+    
     this.songRepository.save(newsong);
 
     return newsong;
