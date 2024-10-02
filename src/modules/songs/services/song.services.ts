@@ -1,15 +1,16 @@
 import { Injectable, Req, Request, UploadedFile } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { song } from 'src/database/entities/song.entity';
+import { Song } from 'src/database/entities/song.entity';
 import { Repository } from 'typeorm';
 import { createSongDTO } from '../dto/create-song.dto';
 import * as path from 'path';
 import * as fs from 'fs';
+import { updateArtistDto } from 'src/modules/artists/dto/update-artist.dto';
 @Injectable()
 export class songService {
   constructor(
-    @InjectRepository(song)
-    private songRepository: Repository<song>,
+    @InjectRepository(Song)
+    private songRepository: Repository<Song>,
   ) {}
 
   public async getAll() {
@@ -42,4 +43,12 @@ export class songService {
 
     return newsong;
   }
+  findSongByArtist(artistId : number){
+    return this.songRepository.find(
+      {
+        where:{artistId : artistId}
+      }
+    )
+  }
+  
 }

@@ -8,5 +8,7 @@ export class createSongDTO{
     @IsNotEmpty()
     genre : string
     
+    @IsNotEmpty()
+    artistId:number
     duration : number
 }

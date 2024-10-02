@@ -3,7 +3,9 @@ import {
   Controller,
   Get,
   HttpStatus,
+  Param,
   ParseFilePipeBuilder,
+  ParseIntPipe,
   Post,
   Req,
   UploadedFile,
@@ -55,5 +57,9 @@ export class songController {
       this._storeageServce.upload(newsong.id,file)
     return true;
   }
-  
+  @Get('get-by-artist/:id')
+  getByArtist( @Param('id', ParseIntPipe) id: number)
+  {
+    return this._songService.findSongByArtist(id)
+  }
 }

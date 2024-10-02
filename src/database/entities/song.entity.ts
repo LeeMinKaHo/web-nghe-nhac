@@ -1,7 +1,10 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
+import { Artist } from "./artist.entity"
+import { PlaylistSong } from "./playlist-song.entity"
+
 
 @Entity("songs")
-export class song{
+export class Song{
     @PrimaryGeneratedColumn()
     id : number
     @CreateDateColumn()
@@ -20,6 +23,13 @@ export class song{
     duration : number
     @Column()
     file_url : string
-    
+    @Column()
+    artistId:number
+    @ManyToOne(() => Artist ,(artist) => artist.songs)
+    artist : Artist
+
     downloadUrl:string
+
+    @OneToMany(() => PlaylistSong, (playlistSong) => playlistSong.song)
+    playlistSongs : PlaylistSong[]
 }

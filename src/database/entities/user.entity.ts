@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
 @Entity('users')
 export class user{
     @PrimaryGeneratedColumn()
@@ -24,4 +24,6 @@ export class user{
 
     @Column()
     role: string;
+
+
 }
