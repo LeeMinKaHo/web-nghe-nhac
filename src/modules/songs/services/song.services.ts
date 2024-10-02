@@ -1,11 +1,13 @@
 import { Injectable, Req, Request, UploadedFile } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Song } from 'src/database/entities/song.entity';
-import { Repository } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
 import { createSongDTO } from '../dto/create-song.dto';
 import * as path from 'path';
 import * as fs from 'fs';
 import { updateArtistDto } from 'src/modules/artists/dto/update-artist.dto';
+import { SearchSongDto } from '../dto/search-song.dto';
+import { title } from 'process';
 @Injectable()
 export class songService {
   constructor(
@@ -17,9 +19,8 @@ export class songService {
     return await this.songRepository.find();
   }
 
-  public async create( CreateSongDTO: createSongDTO, file: Express.Multer.File) {
-    
-     let newsong = this.songRepository.create({
+  public async create(CreateSongDTO: createSongDTO, file: Express.Multer.File) {
+    let newsong = this.songRepository.create({
       ...CreateSongDTO,
     });
     newsong.duration = 300;
@@ -38,17 +39,15 @@ export class songService {
     fs.writeFileSync(filePath, file.buffer);
 
     newsong.file_url = `${process.env.HOST}/song/${newsong.id.toString()}/${file.originalname}`;
-    
+
     this.songRepository.save(newsong);
 
     return newsong;
   }
-  findSongByArtist(artistId : number){
-    return this.songRepository.find(
-      {
-        where:{artistId : artistId}
-      }
-    )
+  findSongByArtist(artistId: number) {
+    return this.songRepository.find({
+      where: { artistId: artistId },
+    });
   }
   
 }
