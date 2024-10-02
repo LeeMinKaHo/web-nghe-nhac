@@ -11,6 +11,10 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { cwd } from 'process';
 import { currentUserMiddleware } from './modules/users/middlewares/current-user.middleware';
+import { artistModule } from './modules/artists/artists.module';
+import { PlaylistModule } from './modules/playlists/playlist.module';
+import { PlaylistSongModule } from './modules/playlist-song/playlist-song.module';
+
 
 
 @Module({
@@ -24,7 +28,10 @@ import { currentUserMiddleware } from './modules/users/middlewares/current-user.
       logging:true
     }),
     UserModule,
-    songModule
+    songModule,
+    artistModule,
+    PlaylistModule,
+    PlaylistSongModule
   ],
   controllers: [AppController],
   providers: [AppService],
