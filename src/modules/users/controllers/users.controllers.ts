@@ -6,6 +6,7 @@ import { UsersService } from "../services/users.services";
 import { UserReponse } from "../dto/usereponse.dto";
 import { forgotPasswordDTO } from "../dto/forGotPassword.dto";
 import { tokenService } from "../services/token.services";
+import { MailService } from "../services/mail.services";
 
 
 @Controller('users')
@@ -13,7 +14,8 @@ export class UsersController{
     constructor(
         private usersService : UsersService,
         private authService : AuthService,
-        private tokenService : tokenService
+        private tokenService : tokenService,
+        private mailService : MailService
     ){}
     @Post('sign-up')
     async signUp(@Body() signUpDTO : SignUpDTO){
@@ -30,8 +32,9 @@ export class UsersController{
         return "Login susscessful";
     }
     @Post('forgot-password')
-    async forgotPassword(@Body() forgotPasswordDTO : forgotPasswordDTO)
+    async forgotPassword(id : number)
     {
-        return await this.tokenService.createToken(forgotPasswordDTO)
+        return  await this.authService.forgotPassword(id)
     }
+ 
 }

@@ -14,6 +14,7 @@ import { currentUserMiddleware } from './modules/users/middlewares/current-user.
 import { artistModule } from './modules/artists/artists.module';
 import { PlaylistModule } from './modules/playlists/playlist.module';
 import { PlaylistSongModule } from './modules/playlist-song/playlist-song.module';
+import { ConfigModule } from '@nestjs/config';
 
 
 
@@ -31,7 +32,15 @@ import { PlaylistSongModule } from './modules/playlist-song/playlist-song.module
     songModule,
     artistModule,
     PlaylistModule,
-    PlaylistSongModule
+    PlaylistSongModule,
+    MailerModule.forRoot({
+      transport: {
+        host: process.env.EMAIL_HOST,
+        auth: {
+          user: process.env.EMAIL_USERNAME,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      },})
   ],
   controllers: [AppController],
   providers: [AppService],

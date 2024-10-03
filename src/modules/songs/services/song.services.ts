@@ -58,5 +58,9 @@ export class songService {
       where: { artistId: artistId },
     });
   }
-  
+  searchByName(name : string){
+    return this.songRepository.createQueryBuilder('songs')
+      .where('songs.title LIKE :name', { name: `%${name}%` })
+      .getMany();
+  }
 }

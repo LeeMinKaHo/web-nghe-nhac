@@ -70,4 +70,14 @@ export class songController {
   {
     return this._songService.findSongByArtist(id)
   }
+
+  @Get('search')
+  async search(@Query('name') name: string) {
+    if (!name) {
+      throw new Error('Search term is required');
+    }
+
+    const songs = await this._songService.searchByName(name);
+    return songs;
+  }
 }

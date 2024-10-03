@@ -6,12 +6,16 @@ import { BadRequestException, Injectable } from "@nestjs/common";
 import * as bcrypt from 'bcrypt';
 import { SignUpDTO } from "../dto/signUp.dto";
 import { plainToInstance } from 'class-transformer';
+import { forgotPasswordDTO } from "../dto/forGotPassword.dto";
+import { MailService } from "./mail.services";
+
 
 @Injectable()
 export class AuthService{
     constructor(
         @InjectRepository(user)
-        private userRepository : Repository<user>
+        private userRepository : Repository<user>,
+        private mailService: MailService
     ){}
 
     async SignUp(signUpDTO : SignUpDTO){
@@ -51,5 +55,12 @@ export class AuthService{
             throw new BadRequestException('Invalid email or password');
         }
 
+    }
+    async forgotPassword(userId : number){
+        const user = await this.userRepository.findOne({
+            where :{id : userId},
+            select: ["username", "email", "id"],
+        })
+        return await this.mailService.sendMail(user)
     }
 }
