@@ -6,7 +6,7 @@ import { BadRequestException, Injectable } from "@nestjs/common";
 import * as bcrypt from 'bcrypt';
 import { SignUpDTO } from "../dto/signUp.dto";
 import { plainToInstance } from 'class-transformer';
-import { forgotPasswordDTO } from "../dto/forGotPassword.dto";
+
 import { MailService } from "./mail.services";
 
 
@@ -62,5 +62,30 @@ export class AuthService{
             select: ["username", "email", "id"],
         })
         return await this.mailService.sendMail(user)
+    }
+    async ResetPassword(userId : number , newPassword : string)
+    {
+        try {
+            // Find the user by their ID (assuming there's a user service or repository)
+            const user = await this.userRepository.findOneBy({
+                id : userId
+            });
+    
+            if (!user) {
+                throw new Error('User not found');
+            }
+    
+            // Hash the new password
+            const hashedPassword = await bcrypt.hash(newPassword, 10);
+    
+            // Update the user's password (assuming there's a method to update the user)
+            await this.userRepository.update(userId, {
+                password: hashedPassword,  // Only update the password field
+            });
+            return true;  // Return true if the operation was successful
+        } catch (error) {
+            console.error('Error resetting password:', error);
+            return false;  // Return false if there was an error
+        }
     }
 }

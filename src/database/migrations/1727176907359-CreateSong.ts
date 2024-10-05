@@ -47,6 +47,10 @@ export class CreateSong1727176907359 implements MigrationInterface {
                 {
                     name:"file_url",
                     type:"varchar"
+                },
+                {
+                    name:"artist_id",
+                    type:"int"
                 }
             ]
         }))

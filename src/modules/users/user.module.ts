@@ -8,10 +8,17 @@ import { tokenService } from "./services/token.services";
 import { token } from "src/database/entities/token.entity";
 import { MailerModule } from "@nestjs-modules/mailer";
 import { MailService } from "./services/mail.services";
-
+import { JwtModule } from "@nestjs/jwt";
+import * as dotenv from 'dotenv';
+dotenv.config();
 @Module({
     imports: [
-      TypeOrmModule.forFeature([user,token])
+      TypeOrmModule.forFeature([user,token] ),
+      JwtModule.register({
+        global: true,
+        secret: process.env.JWT_CONSTANTS,
+        signOptions: { expiresIn: '60s' },
+      })
     ],
     providers: [UsersService , AuthService, tokenService , MailService],
     controllers: [UsersController],

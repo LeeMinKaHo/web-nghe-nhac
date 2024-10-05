@@ -30,12 +30,12 @@ export class CreateUser1726748433150 implements MigrationInterface {
                     },
                     {
                         name:"createat",
-                        type:"datetime",
+                        type:"timestamp",
                         default:"now()"
                     },
                     {
                         name:"updateat",
-                        type:"datetime",
+                        type:"timestamp",
                         default:"now()"
 
                     },

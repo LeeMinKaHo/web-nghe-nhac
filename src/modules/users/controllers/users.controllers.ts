@@ -1,12 +1,12 @@
-import { Body, Controller, Post, Session } from "@nestjs/common";
+import { Body, Controller, Param, ParseIntPipe, Post, Session } from "@nestjs/common";
 import { SignInDTO } from "../dto/signIn.dto";
 import { SignUpDTO } from "../dto/signUp.dto";
 import { AuthService } from "../services/auth.services";
 import { UsersService } from "../services/users.services";
-import { UserReponse } from "../dto/usereponse.dto";
-import { forgotPasswordDTO } from "../dto/forGotPassword.dto";
+
 import { tokenService } from "../services/token.services";
 import { MailService } from "../services/mail.services";
+import { resetPasswordDto } from "../dto/resetPassword.dto";
 
 
 @Controller('users')
@@ -31,10 +31,15 @@ export class UsersController{
         console.log(session.userId)
         return "Login susscessful";
     }
-    @Post('forgot-password')
-    async forgotPassword(id : number)
+    @Post('forgot-password/:id')
+    async forgotPassword(@Param('id', ParseIntPipe) id: number )
     {
         return  await this.authService.forgotPassword(id)
     }
- 
+    @Post('reset-password')
+    async resetPassword(@Body() ResetPasswordDto : resetPasswordDto){
+        await this.tokenService.verifyToken(ResetPasswordDto.tokenValue);
+        console.log(true)
+        return this.authService.ResetPassword(ResetPasswordDto.id,ResetPasswordDto.newPassword)
+    }
 }
