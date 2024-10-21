@@ -37,9 +37,9 @@ export class AuthService{
         return plainToInstance(user, newUser);
     }
     async SignIn(signInDTO : SignInDTO){
-        const username = signInDTO.username
+        const username = signInDTO.email
         const user = await this.userRepository.findOne({
-            where: { username },
+            where: { email : username },
             select: [ "id",'email', 'password','avatarUrl'],
 
           });

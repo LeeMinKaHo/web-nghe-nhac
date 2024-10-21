@@ -42,7 +42,7 @@ export class songController {
   }
   @Post()
   @UseGuards(RolesGuard)
-  @Roles(['ADMIN'])
+  @Roles(['USER'])
   @UseInterceptors(FileInterceptor('file'))
   async create(
     @Req() req,

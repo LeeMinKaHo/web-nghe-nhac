@@ -9,12 +9,13 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { songModule } from './modules/songs/song.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { cwd } from 'process';
 import { currentUserMiddleware } from './modules/users/middlewares/current-user.middleware';
 import { artistModule } from './modules/artists/artists.module';
 import { PlaylistModule } from './modules/playlists/playlist.module';
 import { PlaylistSongModule } from './modules/playlist-song/playlist-song.module';
-import { ConfigModule } from '@nestjs/config';
+import { invoiceModule } from './modules/invoice/invoice.module';
+import { SubcriptionModule } from './modules/subcription/subcription.module';
+import { PlanModule } from './modules/plan/plan.module';
 
 
 
@@ -33,6 +34,9 @@ import { ConfigModule } from '@nestjs/config';
     artistModule,
     PlaylistModule,
     PlaylistSongModule,
+    invoiceModule,
+    SubcriptionModule,
+    PlanModule,
     MailerModule.forRoot({
       transport: {
         host: process.env.EMAIL_HOST,

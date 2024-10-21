@@ -10,6 +10,7 @@ import { MailerModule } from "@nestjs-modules/mailer";
 import { MailService } from "./services/mail.services";
 import { JwtModule } from "@nestjs/jwt";
 import * as dotenv from 'dotenv';
+import { invoiceModule } from "../invoice/invoice.module";
 dotenv.config();
 @Module({
     imports: [
