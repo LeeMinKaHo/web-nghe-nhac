@@ -8,6 +8,7 @@ import * as fs from 'fs';
 import { updateArtistDto } from 'src/modules/artists/dto/update-artist.dto';
 import { SearchSongDto } from '../dto/search-song.dto';
 import { title } from 'process';
+import { PaginationDto } from 'src/shared/pagination/dto/pagination.dto';
 @Injectable()
 export class songService {
   constructor(
@@ -15,8 +16,16 @@ export class songService {
     private songRepository: Repository<Song>,
   ) {}
 
-  public async getAll() {
-    return await this.songRepository.find();
+  public async getAll( pagination : PaginationDto) {
+    const songs = this.songRepository
+                      .createQueryBuilder("songs")
+                      .take(pagination.limit)
+                      .skip(pagination.offset)
+                      .leftJoinAndSelect("songs.artist", 'artist')
+                      .getManyAndCount()
+    
+    return songs;
+
   }
 
   public async create(CreateSongDTO: createSongDTO, file: Express.Multer.File) {
@@ -49,5 +58,9 @@ export class songService {
       where: { artistId: artistId },
     });
   }
-  
+  searchByName(name : string){
+    return this.songRepository.createQueryBuilder('songs')
+      .where('songs.title LIKE :name', { name: `%${name}%` })
+      .getMany();
+  }
 }

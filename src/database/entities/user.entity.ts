@@ -5,7 +5,7 @@ export class user{
     id:number
 
     @CreateDateColumn()
-    createAt : Date
+    createat : Date
 
     @UpdateDateColumn()
     updateat :Date

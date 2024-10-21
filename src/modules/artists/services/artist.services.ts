@@ -5,6 +5,7 @@ import { Repository } from "typeorm";
 import { CreateArtistDto } from "../dto/create-artist.dto";
 import { updateArtistDto } from "../dto/update-artist.dto";
 import { user } from "src/database/entities/user.entity";
+import { PaginationDto } from "src/shared/pagination/dto/pagination.dto";
 
 @Injectable()
 export class artistService{
@@ -12,10 +13,13 @@ export class artistService{
         @InjectRepository(Artist)
         private artistRepository: Repository<Artist>
     ){}
-    getALL(){
-        return this.artistRepository.findBy({
-            active:true
-        })
+    getALL(pagination : PaginationDto){
+        return  this.artistRepository
+       .createQueryBuilder("artist")
+       .where("artist.active = true")
+       .take(pagination.limit)
+       .skip(pagination.offset)
+       .getManyAndCount()
     }
     getByID(id : number){
         return this.artistRepository.findOneBy({

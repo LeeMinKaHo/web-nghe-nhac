@@ -7,6 +7,7 @@ import {
   ParseFilePipeBuilder,
   ParseIntPipe,
   Post,
+  Query,
   Req,
   UploadedFile,
   UseGuards,
@@ -18,23 +19,30 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { RolesGuard } from 'src/guards/roles.guards';
 import { Roles } from 'src/modules/users/decorators/roles.decoration';
 import { StorageService } from '../services/storage.services';
+import { PaginationDto } from 'src/shared/pagination/dto/pagination.dto';
+import { pageDto } from 'src/shared/pagination/dto/page.dto';
+import { PaginationMetaDataDto } from 'src/shared/pagination/dto/pagination-metadata.dto';
 
 @Controller('songs')
 export class songController {
   constructor(private _songService: songService , private _storeageServce : StorageService) {}
   @Get()
-  async getAll() {
-    const songs = await this._songService.getAll();
-    
+  async getAll(
+    @Query() pagination : PaginationDto
+  ) {
+    const [songs,totalItems]= await this._songService.getAll(pagination);
     for (const song of songs) { // Use 'for...of' to iterate
       const Url = await this._storeageServce.downloadUrl(song.id); // Assuming this method generates the URL
       song.downloadUrl = Url.href
     }
-    return songs; //
+    return new pageDto(
+      songs,
+      new PaginationMetaDataDto(pagination,totalItems),
+    );
   }
   @Post()
   @UseGuards(RolesGuard)
-  @Roles(['ADMIN'])
+  @Roles(['USER'])
   @UseInterceptors(FileInterceptor('file'))
   async create(
     @Req() req,
@@ -61,5 +69,15 @@ export class songController {
   getByArtist( @Param('id', ParseIntPipe) id: number)
   {
     return this._songService.findSongByArtist(id)
+  }
+
+  @Get('search')
+  async search(@Query('name') name: string) {
+    if (!name) {
+      throw new Error('Search term is required');
+    }
+
+    const songs = await this._songService.searchByName(name);
+    return songs;
   }
 }

@@ -11,5 +11,5 @@ export class token{
     @Column()
     expireAt:Date
     @Column()
-    userID:number
+    userId:number
 }
