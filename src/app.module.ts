@@ -17,8 +17,6 @@ import { invoiceModule } from './modules/invoice/invoice.module';
 import { SubcriptionModule } from './modules/subcription/subcription.module';
 import { PlanModule } from './modules/plan/plan.module';
 
-
-
 @Module({
   imports: [ 
     ServeStaticModule.forRoot({
@@ -46,7 +44,7 @@ import { PlanModule } from './modules/plan/plan.module';
         },
       },})
   ],
-  controllers: [AppController],
+  controllers: [AppController , ],
   providers: [AppService],
 })
 export class AppModule {
