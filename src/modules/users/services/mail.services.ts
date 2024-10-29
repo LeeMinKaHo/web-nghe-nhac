@@ -13,25 +13,73 @@ export class MailService {
 
   async sendMail(User : user) {
     const resetToken = await this.TokenService.createToken(User.id);
-    console.log("Token" ,resetToken)
-    const message = "Hello Khoa"
+   
+    const message = "Hello Khoa";
+
     const htmlMessage = `
-        <p>Hi ${User.username},<p/>
-        <p>Forget your password</p>
-        <p>We receive your request to reset your password account<p>
-
-        <a href="http://localhost:3000/resetPassword?token=${resetToken}">click here to reset password<a>
-
-        <p>If you did not forget your password, you can ignore this email.</p>
+        <html>
+            <head>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        background-color: #f4f4f4;
+                        padding: 20px;
+                    }
+                    .container {
+                        background-color: #ffffff;
+                        border-radius: 5px;
+                        padding: 20px;
+                        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                    }
+                    h1 {
+                        color: #333;
+                    }
+                    p {
+                        color: #555;
+                        line-height: 1.5;
+                    }
+                    .reset-link {
+                        display: inline-block;
+                        margin: 20px 0;
+                        padding: 10px 20px;
+                        background-color: #007bff;
+                        color: white;
+                        text-decoration: none;
+                        border-radius: 5px;
+                    }
+                    .reset-link:hover {
+                        background-color: #0056b3;
+                    }
+                    footer {
+                        margin-top: 20px;
+                        font-size: 12px;
+                        color: #999;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>Hi ${User.username},</h1>
+                    <p>We received your request to reset your password.</p>
+                    <p>Please click the button below to reset your password:</p>
+                    <a class="reset-link" href="http://localhost:3000/resetPassword?token=${resetToken}">Reset Password</a>
+                    <p>If you did not forget your password, you can ignore this email.</p>
+                </div>
+                <footer>
+                    <p>Thank you,<br>Spotify</p>
+                </footer>
+            </body>
+        </html>
     `;
 
-    return await this.mailService.sendMail({
+    await this.mailService.sendMail({
       from: 'Kingsley Okure <kingsleyokgeorge@gmail.com>',
       to: User.email,
       subject: `How to Send Emails with Nodemailer`,
       text: message,
       html: htmlMessage,
     });
+    return "Send mail successfull"
 
   }
 }

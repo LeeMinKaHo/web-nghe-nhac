@@ -34,12 +34,15 @@ export class artistController{
     create(@Body() newArtist : CreateArtistDto, @CurrentUser() currentUser:user){
         return this._artistService.create(newArtist, currentUser)
     }
-    @Patch(':id')
-    update(@Param('id', ParseIntPipe) id: number,@Body() updateArtist : updateArtistDto){
-        return this._artistService.update(id,updateArtist)
+    @Patch()
+    @UseGuards(RolesGuard)
+    @Roles(['USER'])
+    update(@CurrentUser() currentUser : user,@Body() updateArtist : updateArtistDto){
+        return this._artistService.update(currentUser,updateArtist)
     }
-    @Delete(':id')
-    delete(@Param('id', ParseIntPipe) id: number){
-        return this._artistService.delete(id)
+    @UseGuards(RolesGuard)
+    @Roles(['USER'])
+    delete(@CurrentUser() currentUser : user){
+        return this._artistService.delete(currentUser)
     }
 }
